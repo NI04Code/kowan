@@ -42,6 +42,7 @@ async function register() {
 
         if (verificationResponse.ok) {
             showMessage('Registration successful');
+            showMessage(verificationResponse.message)
         } else {
             showMessage('Registration failed', true);
         }

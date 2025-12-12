@@ -33,6 +33,7 @@ export const handleRegisterStart = async (req: Request, res: Response, next: Nex
             excludeCredentials: [],
             authenticatorSelection: {
                 residentKey: 'preferred',
+                userVerification: 'required'
             },
             // Support for the two most common algorithms: ES256, and RS256
             supportedAlgorithmIDs: [-7, -257],
