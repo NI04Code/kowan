@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import config from '../config.json';
 import {router as passkeyRoutes} from './routes/routes';
+import {router as circleRoutes} from './routes/circleRoutes';
 import session from 'express-session';
 
 const app: Express = express();
@@ -26,7 +27,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(
     session({
       // @ts-ignore
-      secret: process.env.SESSION_SECRET,
+      secret: process.env.SESSION_SECRET || "secret123",
       saveUninitialized: true,
       resave: false,
       cookie: {
@@ -53,6 +54,7 @@ if (process.env.NODE_ENV === 'production' || config.NODE_ENV === 'production') {
  *                               Register all routes
  ***********************************************************************************/
 app.use('/api/passkey', passkeyRoutes);
+app.use('/calculate', circleRoutes);
 
 app.use(express.static("src/public"));
 

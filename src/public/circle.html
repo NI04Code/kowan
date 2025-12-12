@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Lingkaran</title>
+    <link rel="stylesheet" href="/css/style.css"> 
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .container { max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        label, input, button { display: block; margin-bottom: 10px; }
+        input[type="number"] { width: 95%; padding: 8px; }
+        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        #results { margin-top: 20px; padding: 15px; border: 1px solid #eee; background-color: #f9f9f9; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Kalkulator Luas & Keliling Lingkaran</h1>
+    
+    <label for="radius">Masukkan Jari-Jari (r):</label>
+    <input type="number" id="radius" placeholder="Contoh: 7" min="0" required>
+    
+    <button onclick="hitungLingkaran()">Hitung</button>
+
+    <div id="results">
+        <p><strong>Luas Lingkaran (L):</strong> <span id="luas">0</span></p>
+        <p><strong>Keliling Lingkaran (K):</strong> <span id="keliling">0</span></p>
+    </div>
+</div>
+
+<script>
+    /**
+     * Logika untuk menghitung Luas dan Keliling Lingkaran
+     * * Luas (L) = π * r²
+     * Keliling (K) = 2 * π * r
+     */
+    function hitungLingkaran() {
+        // Ambil nilai jari-jari (radius) dari input
+        const radiusInput = document.getElementById('radius').value;
+        const r = parseFloat(radiusInput);
+        
+        // Cek jika input tidak valid (misalnya kosong atau bukan angka positif)
+        if (isNaN(r) || r <= 0) {
+            alert("Mohon masukkan nilai jari-jari yang valid dan positif.");
+            document.getElementById('luas').textContent = 'Error';
+            document.getElementById('keliling').textContent = 'Error';
+            return;
+        }
+
+        // Tentukan nilai PI
+        const PI = Math.PI; // Menggunakan konstanta bawaan JavaScript
+
+        // Hitung Luas
+        const luas = PI * r * r; // Atau PI * Math.pow(r, 2)
+
+        // Hitung Keliling
+        const keliling = 2 * PI * r;
+
+        // Tampilkan hasil ke elemen HTML (dibatasi 2 desimal)
+        document.getElementById('luas').textContent = luas.toFixed(2);
+        document.getElementById('keliling').textContent = keliling.toFixed(2);
+    }
+</script>
+
+</body>
+</html>

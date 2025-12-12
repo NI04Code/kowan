@@ -85,6 +85,7 @@ export const handleLoginFinish = async (req: Request, res: Response, next: NextF
                 uint8ArrayToBase64(bodyCredIDBuffer),
                 authenticationInfo.newCounter
             );
+            req.session.userId = req.session.loggedInUserId
             res.send({verified: true});
         } else {
             next(new CustomError('Verification failed', 400));
