@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-scripts
+data:
+  # This key becomes the filename inside the container
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS users (
+        id VARCHAR(255) PRIMARY KEY,
+        username VARCHAR(255) NOT NULL UNIQUE
+    );
+
+    CREATE TABLE IF NOT EXISTS credentials (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id VARCHAR(255) NOT NULL,
+        credential_id VARCHAR(255) NOT NULL,
+        public_key TEXT NOT NULL,
+        counter INT NOT NULL,
+        transports VARCHAR(255),
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+  clusterIP: None
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0
+        # MySQL 8 specific authentication method
+        args:
+          - "--default-authentication-plugin=mysql_native_password"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "my-secret-pw"
+        - name: MYSQL_DATABASE
+          value: "webauthn_db"
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        # Mount the SQL script into the special initialization folder
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: init-script
+        configMap:
+          name: mysql-init-scripts
